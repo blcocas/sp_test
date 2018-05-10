@@ -39,7 +39,7 @@ void read_dht11_dat() {
 
         if ((i >= 4) && (i % 2 == 0)) {
             dht11_dat[j/8] <<= 1;
-            if (counter > 25)       // this check is how long the pulse width is low.
+            if (counter > 30)       // this check is how long the pulse width is low.
                 dht11_dat[j/8] |= 1;
             j++;
         }
