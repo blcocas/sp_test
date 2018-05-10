@@ -53,21 +53,20 @@ void read_dht11_dat() {
         printf("Data not good, skip \n");
     }
 }
- 
+
+
 int main( void )
 {
     printf( "Raspberry Pi wiringPi DHT11 Temperature test program\n" );
- 
+
     if ( wiringPiSetup() == -1 )
         exit( 1 );
- 
+
     while ( 1 )
     {
         read_dht11_dat();
-        delay( 1000 ); 
+        delay( 1000 );
     }
- 
+
     return(0);
 }
- 
-
