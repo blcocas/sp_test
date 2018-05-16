@@ -65,11 +65,13 @@ void read_dht11_dat()
         f = dht11_dat[2] * 9. / 5. + 32;
  
         lcdPosition(lcd, 0, 0);
-        lcdPrintf(lcd, "Humidity: %d.%d %%\n", dht11_dat[0], dht11_dat[1]);
- 
+	printf("hello");
+       // lcdPrintf(lcd, "Humidity: %d.%d %%\n", dht11_dat[0], dht11_dat[1]);
+       
         lcdPosition(lcd, 0, 1);
+	printf("hello2");
         //lcdPrintf(lcd, "Temp: %d.0 C", dht11_dat[2]); //Uncomment for Celcuis
-        lcdPrintf(lcd, "Temp: %.1f F", f); //Comment out for Celcuis
+       // lcdPrintf(lcd, "Temp: %.1f F", f); //Comment out for Celcuis
     }
 }
  
@@ -81,6 +83,7 @@ int main(void)
         
     while (1)
     {
+        printf("hello");
         read_dht11_dat();
         delay(1000); 
     }
