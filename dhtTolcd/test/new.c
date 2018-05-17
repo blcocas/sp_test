@@ -54,14 +54,15 @@ void read_dht11_dat(int lcd) {
 
     if ((j >= 40) && (dht11_dat[4] == ( (dht11_dat[0] + dht11_dat[1] + dht11_dat[2] + dht11_dat[3]) & 0xFF ))) {
         f = dht11_dat[2] * 9. / 5. + 32;
-        // printf("Humidity = %d.%d %% Temperature = %d.%d C (%.1f F)\n",
-        // dht11_dat[0], dht11_dat[1], dht11_dat[2], dht11_dat[3], f);
-        lcdPosition(lcd,0,0);
-        lcdPuts(lcd, "HELLO WORLD");
+        lcdPosition(lcd, 0, 0);
+        lcdPrintf(lcd, "Humidity: %d.%d %%\n", dht11_dat[0], dht11_dat[1]);
+        lcdPosition(lcd, 0, 1);
+        lcdPrintf(lcd, "Temp: %d.0 C", dht11_dat[2]); //Uncomment for Celcuis
+
     } else {
         // printf("Data not good, skip \n");
 				lcdPosition(lcd,0,1);
-				lcdPuts(lcd, "HELLO WORLD2");
+				lcdPuts(lcd, "Data Not Good, Skip");
     }
 }
 
