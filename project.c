@@ -28,7 +28,7 @@ int vibration_input();
 int dht11_dat[5] = { 0, 0, 0, 0, 0 };
 
 
-void read_dht11_dat(int lcd) {
+void read_dht11_dat(int lcd, int mode) {
     uint8_t laststate = HIGH;
     uint8_t counter = 0;
     uint8_t j = 0, i;
@@ -67,12 +67,29 @@ void read_dht11_dat(int lcd) {
     }
 
     if ((j >= 40) && (dht11_dat[4] == ( (dht11_dat[0] + dht11_dat[1] + dht11_dat[2] + dht11_dat[3]) & 0xFF ))) {
+      switch(mode){
+        case 1 :
+          lcdPosition(lcd, 0, 0);
+          lcdPrintf(lcd, "LED LIGHT ON!");
+          break;
+        case 2 :
+          lcdPosition(lcd, 0, 0);
+          lcdPirntf(lcd, "LED LIGHT OFF!");
+          break;
+        case 3 :
+          f = dht11_dat[2] * 9. / 5. + 32;
+          lcdPosition(lcd, 0, 0);
+          lcdPrintf(lcd, "Humidity: %d.%d %%\n", dht11_dat[0], dht11_dat[1]);
+          lcdPosition(lcd, 0, 1);
+          lcdPrintf(lcd, "Temp: %d.0 C", dht11_dat[2]); //Uncomment for Celcuis
+          break;
+      }
+
         f = dht11_dat[2] * 9. / 5. + 32;
         lcdPosition(lcd, 0, 0);
         lcdPrintf(lcd, "Humidity: %d.%d %%\n", dht11_dat[0], dht11_dat[1]);
         lcdPosition(lcd, 0, 1);
         lcdPrintf(lcd, "Temp: %d.0 C", dht11_dat[2]); //Uncomment for Celcuis
-
     }
     return;
 }
@@ -116,13 +133,14 @@ int led_toggle(){
   return led_state;
 }
 
-void temperature(){
+void ledout(int mode){
   int lcd;
   if(lcd = lcdInit (2, 16, 4, LCD_RS, LCD_E, LCD_D4, LCD_D5, LCD_D6, LCD_D7, 0, 0, 0, 0)){
     return;
   }
 
-  read_dht11_dat(lcd);
+  read_dht11_dat(lcd,mode);
+  delay(3000);
   return;
 }
 
@@ -135,7 +153,6 @@ int main(){
       exit(1);
     }
 
-
     pinMode(LED, OUTPUT);
     pinMode(VIB, INPUT);
 
@@ -144,15 +161,20 @@ int main(){
 
         switch(mode){
           case 1 : printf("vibration mode 1\n");
+             if(led_toggle()){
+               printf("led light on\n");
+               ledout(1);
+             }
+             else{
+               printf("led light off\n");
+               ledout(2);
+             }
     	       break;
           case 2 : printf("vibration mode 2 : ");
-    	       led_toggle() ? printf("led light on\n") : printf("led light off\n");
+            printf("Temperature & Humidity");
+            ledout(3);
     	       break;
-          // case 3 : printf("vibration mode 3 : ");
-    	    //    servo_toggle() ? printf("door is open\n") : printf("door is closed\n");
-    	    //   break;
-          case 3 : printf("vibration mode 4 : ");
-    	       temperature();
+          case 3 : printf("vibration mode 3 : ");
     	       break;
           default : printf("vibration mode default\n");
         }
