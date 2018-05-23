@@ -119,7 +119,7 @@ int led_toggle(){
 void temperature(){
   int lcd;
   if(lcd = lcdInit (2, 16, 4, LCD_RS, LCD_E, LCD_D4, LCD_D5, LCD_D6, LCD_D7, 0, 0, 0, 0)){
-    return -1;
+    return;
   }
 
   read_dht11_dat(lcd);
@@ -148,10 +148,10 @@ int main(){
           case 2 : printf("vibration mode 2 : ");
     	       led_toggle() ? printf("led light on\n") : printf("led light off\n");
     	       break;
-          case 3 : printf("vibration mode 3 : ");
-    	       servo_toggle() ? printf("door is open\n") : printf("door is closed\n");
-    	      break;
-          case 4 : printf("vibration mode 4 : ");
+          // case 3 : printf("vibration mode 3 : ");
+    	    //    servo_toggle() ? printf("door is open\n") : printf("door is closed\n");
+    	    //   break;
+          case 3 : printf("vibration mode 4 : ");
     	       temperature();
     	       break;
           default : printf("vibration mode default\n");
