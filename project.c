@@ -157,8 +157,8 @@ int main(){
           case 2 : printf("vibration mode 2 : ");
             printf("Temperature & Humidity");
             lcd = ledInit();
-            read_dht11_dat(lcd)
-    	      break;
+            read_dht11_dat(lcd);
+    	    break;
           case 3 : printf("vibration mode 3 : ");
     	       break;
           default : printf("vibration mode default\n");

@@ -1,14 +1,8 @@
-dht : dht.o
-	gcc -o dht dht.o -l wiringPi
+project : project.o
+	gcc -o project project.o -lwiringPi -lwiringPiDev
 
-dhtTolcd : dhtTolcd.o
-	gcc -o dhtTolcd dhtTolcd.o -l wiringPi
-
-dht.o : dht.c
-	gcc -c dht.c
-
-dhtTolcd.o : dhtTolcd.c
-	gcc -c dhtTolcd.c
+project.o : project.c
+	gcc -c project.c
 
 clean : 
-	rm  *.o dht dhtTolcd
+	rm  *.o project
