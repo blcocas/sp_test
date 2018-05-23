@@ -28,7 +28,7 @@ int vibration_input();
 int dht11_dat[5] = { 0, 0, 0, 0, 0 };
 
 
-void read_dht11_dat(int lcd, int mode) {
+void read_dht11_dat(int lcd) {
     uint8_t laststate = HIGH;
     uint8_t counter = 0;
     uint8_t j = 0, i;
@@ -66,31 +66,14 @@ void read_dht11_dat(int lcd, int mode) {
         }
     }
 
-    if ((j >= 40) && (dht11_dat[4] == ( (dht11_dat[0] + dht11_dat[1] + dht11_dat[2] + dht11_dat[3]) & 0xFF ))) {
-      switch(mode){
-        case 1 :
-          lcdPosition(lcd, 0, 0);
-          lcdPrintf(lcd, "LED LIGHT ON!");
-          break;
-        case 2 :
-          lcdPosition(lcd, 0, 0);
-          lcdPirntf(lcd, "LED LIGHT OFF!");
-          break;
-        case 3 :
-          f = dht11_dat[2] * 9. / 5. + 32;
-          lcdPosition(lcd, 0, 0);
-          lcdPrintf(lcd, "Humidity: %d.%d %%\n", dht11_dat[0], dht11_dat[1]);
-          lcdPosition(lcd, 0, 1);
-          lcdPrintf(lcd, "Temp: %d.0 C", dht11_dat[2]); //Uncomment for Celcuis
-          break;
-      }
+        if ((j >= 40) && (dht11_dat[4] == ( (dht11_dat[0] + dht11_dat[1] + dht11_dat[2] + dht11_dat[3]) & 0xFF ))) {
+            f = dht11_dat[2] * 9. / 5. + 32;
+            lcdPosition(lcd, 0, 0);
+            lcdPrintf(lcd, "Humidity: %d.%d %%\n", dht11_dat[0], dht11_dat[1]);
+            lcdPosition(lcd, 0, 1);
+            lcdPrintf(lcd, "Temp: %d.0 C", dht11_dat[2]); //Uncomment for Celcuis
 
-        f = dht11_dat[2] * 9. / 5. + 32;
-        lcdPosition(lcd, 0, 0);
-        lcdPrintf(lcd, "Humidity: %d.%d %%\n", dht11_dat[0], dht11_dat[1]);
-        lcdPosition(lcd, 0, 1);
-        lcdPrintf(lcd, "Temp: %d.0 C", dht11_dat[2]); //Uncomment for Celcuis
-    }
+        }
     return;
 }
 
@@ -133,21 +116,18 @@ int led_toggle(){
   return led_state;
 }
 
-void ledout(int mode){
+int ledInit(){
   int lcd;
   if(lcd = lcdInit (2, 16, 4, LCD_RS, LCD_E, LCD_D4, LCD_D5, LCD_D6, LCD_D7, 0, 0, 0, 0)){
-    return;
+    return lcd;
   }
-
-  read_dht11_dat(lcd,mode);
-  delay(3000);
-  return;
+  return lcd;
 }
 
 int main(){
 
     int mode;
-
+    int lcd;
     if(wiringPiSetup() == -1){
       printf("Fail to setup WiringPi\n");
       exit(1);
@@ -163,17 +143,22 @@ int main(){
           case 1 : printf("vibration mode 1\n");
              if(led_toggle()){
                printf("led light on\n");
-               ledout(1);
+               lcd = ledInit();
+               lcdPosition(lcd, 0, 0);
+               lcdPrintf(lcd, "LED LIGHT ON!");
              }
              else{
                printf("led light off\n");
-               ledout(2);
+               lcd = ledInit();
+               lcdPosition(lcd, 0, 0);
+               lcdPrintf(lcd, "LED LIGHT OFF!");
              }
     	       break;
           case 2 : printf("vibration mode 2 : ");
             printf("Temperature & Humidity");
-            ledout(3);
-    	       break;
+            lcd = ledInit();
+            read_dht11_dat(lcd)
+    	      break;
           case 3 : printf("vibration mode 3 : ");
     	       break;
           default : printf("vibration mode default\n");
