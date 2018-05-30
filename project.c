@@ -5,6 +5,12 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <time.h>
+#include <sys/types.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <linux/kdev_t.h>
+#include <string.h>
+
 //#include <softPwm.h>
 
 #define MAXTIMINGS    85
@@ -17,14 +23,14 @@
 #define LCD_D7 1
 #define LED 27
 #define VIB 26
-
+#define LED_DEV_FILE "/dev/ledtest_dev"
 
 void INT_handler(int);
 void init();
 int led_toggle();
 int vibration_input();
 
-
+static char receive[7];
 int dht11_dat[5] = { 0, 0, 0, 0, 0 };
 
 
@@ -105,14 +111,19 @@ int vibration_input(){
 
 int led_toggle(){
   static int led_state = 0;//state 0 is led off, 1 is led on
+  int fd = 0;
+
+  if((fd = open(LED_DEV_FILE, O_RDWR)) < 0) exit(1);
+  sleep(2);
 
   if(led_state == 1){
-    digitalWrite(LED, LOW);
+    write(fd, "led_off", strlen("led_off"));
     led_state = 0;
   }else{
-    digitalWrite(LED, HIGH);
+    write(fd, "led_on", strlen("led_on"));
     led_state = 1;
   }
+  close(fd);
   return led_state;
 }
 
