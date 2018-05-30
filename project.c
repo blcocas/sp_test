@@ -117,11 +117,11 @@ int led_toggle(){
   sleep(2);
 
   if(led_state == 1){
-    write(fd, "led_off", strlen("led_off"));
+    write(fd, "led_off", strlen("led_off")+1);
     led_state = 0;
     sleep(2);
   }else{
-    write(fd, "led_on", strlen("led_on"));
+    write(fd, "led_on", strlen("led_on")+1);
     led_state = 1;
     sleep(2);
   }
