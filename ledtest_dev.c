@@ -32,11 +32,10 @@ int ledtest_close(struct inode *pinode, struct file *pfile){
 ssize_t ledtest_write(struct file *pfile, const char __user *buffer, size_t length, loff_t *offset){
   copy_from_user(msg, buffer, length);
 
-  printk("%s\n", msg);
   if(strcmp(msg, "led_off") == 0){
     printk("led off\n");
     gpio_set_value(GPIO, 0);
-  }else{
+  }else if(strcmp(msg, "led_on") == 0){
     printk("led on\n");
     gpio_set_value(GPIO, 1);
   }
