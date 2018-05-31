@@ -135,24 +135,26 @@ int button_toggle(){
 
   int fd = 0;
   char buff[8];
+  int on_off = 0;
   fd = open("LED_DEV_FILE",O_RDONLY)
 
   while(1){ //
     int pid;
     read(fd,buff,2);
 
-    if(strcmp(buff,"on")){
-      pid = fork();
+    if(strcmp(buff,"on") == 0){
+      if(!on_off) pid = fork();
+      on_off = 1;
+      if(pid == 0) break; //자식프로세스
 
       lcd = lcd_set();
       lcdPosition(lcd, 0, 0);
       lcdPrintf(lcd, "Actived");
 
-      if(pid == 0) break; //자식프로세스
-
     }
-    else if(strcmp(buff,"of")){
-          //자식프로세스 종료
+    else if(strcmp(buff,"of") == 0){
+    //자식프로세스 종료
+      on_off = 0;
 
       lcd = lcd_set();
       lcdPosition(lcd, 0, 0);
