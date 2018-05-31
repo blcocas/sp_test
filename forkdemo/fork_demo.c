@@ -5,7 +5,6 @@
 void fork_example(){
 
   int a = 0;
-
   while(1){
 
     scanf("%d",&a);
@@ -35,5 +34,4 @@ void main(){
     printf("자식프로세스 작동중...");
     sleep(100);
   }
-
 }
