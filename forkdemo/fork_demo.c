@@ -6,13 +6,15 @@ void fork_example(){
 
   int a = 1;
   int b = 0;
+  int on_off = 0;
+
   printf("input : ");
   scanf("%d",&a);
   while(1){
     int pid;
-    int b = 0;
     if(a == 1){
-      pid = fork();
+      if(!on_off) pid = fork();
+      on_off = 1;
       printf("1 이입력되었습니다. 그리고 fork되었습니다. b is (%d)\n",b);
       b++;
      // sleep(2);
@@ -33,12 +35,9 @@ void fork_example(){
 
 void main(){
   fork_example();
-  int a;
+  int a = 0;
   while(1){
-    printf("자식프로세스 작동중...\n");
-    printf("type your number:");
-    scanf("%d",&a);
-    printf("%d",a);
-   // sleep(2);
+    printf("자식프로세스 작동중... a is %d\n",a);
+    a++;
   }
 }
