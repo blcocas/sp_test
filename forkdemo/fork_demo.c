@@ -5,47 +5,50 @@
 #include <string.h>
 void fork_example(){
 
-  int a = 1;
-  int b = 0;
+  int signal;
   int on_off = 0;
-
-  printf("input : ");
-  scanf("%d",&a);
+  int pid = 0;
+  int get_pid = 0;
   while(1){
-    int pid;
-    if(a == 1){
-      if(!on_off) pid = fork();
-      on_off = 1;
-     // printf("1 이입력되었습니다. 그리고 fork되었습니다. b is (%d)\n",b);
-      b++;
-     // sleep(2);
+    printf("singal??? : ");
+    scanf("%d",&signal);
+
+    if(signal == 1){
+      switch(on_off){
+        case 0 :
+          pid = fork();
+          //get_pid = getpid();
+          on_off = 1;
+          break;
+
+        case 1 :
+          printf("child(%d) is exited\n",pid);
+          char str1[20] = "kill -9 ";
+          char str2[10];
+          sprintf(str2,"%d",pid);
+          strcat(str1,str2);
+          printf("%s",str1);
+          system(str1);
+          //system("ps -ef | grep defunct | awk '{print $3}' | xargs kill -9");
+          on_off = 0;
+          break;
+      }
     }
 
-    if(pid == 0) {
-        printf("자식프로세스 입니다. while문 탈출!\n");
-	printf("pid :  %d\n",getpid());
-        break; //자식프로세스
-    }
-    else if(a == 0){
-      //int ppid = getppid();
-      //strcat("kill ",ppid);
-      //system("kill    //자식프로세스 종료
-      printf("자식프로세스를 종료합니다.");
+    if(pid == 0){//child
+      printf("child(%d), break!\n",getpid());
+      break;
     }
   }
 }
 
 
 
+
 void main(){
   fork_example();
-  int a = 0;
-  int ppid = getppid();
+  int a =0;
   while(1){
-   scanf("%d",&a);
-   if(a == 1) 
-  	 strcat("kill ", ppid);
-   printf("자식프로세스 작동중... a is %d\n",a);
-   // a++;
+    a++;
   }
 }
