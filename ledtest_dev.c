@@ -48,7 +48,7 @@ int ledtest_close(struct inode *pinode, struct file *pfile){
 ssize_t button_read(struct file *pfile, char __user *buffer, size_t length, loff_t *offset){
   if(button_state == 1){
     printk("button interrupt occured!\n");
-    copy_to_user(buffer, "button_on", length);
+    copy_to_user(buffer, "btn_toggle", length);
     button_state = 0;
   }
   return 0;

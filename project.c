@@ -135,16 +135,16 @@ int led_toggle(){
 int button_toggle(){
 
   int fd = 0;
-  char buff[8];
+  char buff[12];
   int on_off = 0;
   int pid = 0;
 
   fd = open("LED_DEV_FILE",O_RDONLY)
 
   while(1){ //
-    read(fd,buff,6);
+    read(fd,buff,10);
 
-    if(strcmp(buff,"toggle") == 0){
+    if(strcmp(buff,"btn_toggle") == 0){
       switch(on_off){
         case 0 :
           pid = fork();
