@@ -132,7 +132,7 @@ int led_toggle(){
   return led_state;
 }
 
-int button_toggle(){
+void button_toggle(){
 
   int fd = 0;
   char buff[12];
@@ -140,7 +140,7 @@ int button_toggle(){
   int pid = 0;
   int lcd = 0;
 
-  fd = open("LED_DEV_FILE",O_RDONLY)
+  fd = open("LED_DEV_FILE",O_RDONLY);
 
   while(1){ //
     read(fd,buff,12);
