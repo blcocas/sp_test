@@ -7,36 +7,61 @@
 #include <linux/cdev.h>
 #include <linux/kernel.h>
 #include <linux/slab.h>
+#include <linux/interrupt.h>
+#include <asm/irq.h>
 
 #define GPIO 27
+#define BUTTON 22
 #define DEV_NAME "ledtest_dev"
 #define DEV_NUM 240
 
 static char *msg = NULL;
+int button_state = 0;
 
 MODULE_LICENSE("GPL");
 
+irqreturn_t interrupt_handler(int irq, void *dev_id){
+  if(gpio_get_value(BUTTON)){
+    button_state = 1;
+    printk("button on\n");
+  }
+  printk("This is interrupt routine\n");
+  return IRQ_HANDLED;
+}
+
 int ledtest_open(struct inode *pinode, struct file *pfile){
   printk(KERN_ALERT "OPEN ledtest_dev\n");
-  gpio_request(GPIO, "GPIO");
-  gpio_direction_output(GPIO, 1);
+  if(gpio_request(GPIO, "GPIO") < 0)
+	  printk(KERN_ALERT "Led gpio allocation error!\n");
+  if(gpio_direction_output(GPIO, 1) < 0)
+	  printk(KERN_ALERT "Led setting error!\n");
 
   return 0;
 }
 
 int ledtest_close(struct inode *pinode, struct file *pfile){
   printk(KERN_ALERT "RELEASE ledtest_dev\n");
+
   return 0;
 }
+
+ssize_t button_read(struct file *pfile, char __user *buffer, size_t length, loff_t *offset){
+  if(button_state == 1){
+    printk("button interrupt occured!\n");
+    copy_to_user(buffer, "button_on", length);
+    button_state = 0;
+  }
+  return 0;
+}
+
 
 ssize_t ledtest_write(struct file *pfile, const char __user *buffer, size_t length, loff_t *offset){
   copy_from_user(msg, buffer, length);
 
-  printk("%s\n", msg);
   if(strcmp(msg, "led_off") == 0){
     printk("led off\n");
     gpio_set_value(GPIO, 0);
-  }else{
+  }else if(strcmp(msg, "led_on") == 0){
     printk("led on\n");
     gpio_set_value(GPIO, 1);
   }
@@ -49,6 +74,7 @@ struct file_operations fop = {
   .open = ledtest_open,
   .release = ledtest_close,
   .write = ledtest_write,
+  .read = button_read,
 };
 
 int __init ledtest_init(void){
@@ -61,6 +87,12 @@ int __init ledtest_init(void){
     printk("malloc allocator address: 0x%p\n", msg);
   }
 
+  if(gpio_request(BUTTON, "BUTTON") < 0)
+	  printk(KERN_ALERT "Button gpio allocation error\n");
+  if(gpio_direction_input(BUTTON) < 0)
+	  printk(KERN_ALERT "Button setting error\n");
+
+  if(request_irq(gpio_to_irq(BUTTON), interrupt_handler, IRQF_TRIGGER_RISING, "Button", NULL) < 0) printk("Not request interrupt\n");
   return 0;
 }
 
