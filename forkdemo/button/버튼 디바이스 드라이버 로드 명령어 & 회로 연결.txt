@@ -1,0 +1,7 @@
+make
+sudo insmod btn.ko
+sudo mknod -m 666 /dev/btn_dev c 240 0
+./btntest_app
+
+
+È¸·Î: http://www.rasplay.org/?p=3253/

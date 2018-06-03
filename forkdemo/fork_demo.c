@@ -8,7 +8,7 @@ void fork_example(){
   int signal;
   int on_off = 0;
   int pid = 0;
-  int get_pid = 0;
+  // int get_pid = 0;
   while(1){
     printf("singal??? : ");
     scanf("%d",&signal);
