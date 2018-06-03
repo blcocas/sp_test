@@ -93,20 +93,22 @@ int vibration_input(){
   int count = 0;
   clock_t start;
 
-  printf("waiting input\n");
-  delay(700);
+  printf("waiting input : ");
+  delay(1000);
+
   while(!(signal = digitalRead(VIB))){}
+
   printf("First input!\n");
   start = clock();
   count++;
   signal = 0;
-  delay(700);
+  delay(1000);
   while(difftime(clock(), start) < 3000000){
     if(signal = digitalRead(VIB)) {
       count++;
       printf("%d input!\n", count);
       signal = 0;
-      delay(700);
+      delay(1000);
     }
   }
   printf("vibration number is %d\n", count);
@@ -137,43 +139,46 @@ void button_toggle(){
 
   int fd = 0;
   char buff[12];
+  char str1[10] = "kill -9 ";
+  char instruction[20] = "";
   int on_off = 0;
   int pid = 1;
   int lcd = 0;
 
-  fd = open("LED_DEV_FILE",O_RDONLY);
+  fd = open(LED_DEV_FILE, O_RDONLY);
 
-  while(1){ //
+  if(fd<0) printf("Fail to open device file\n");
+  
+  while(1){ 
     read(fd,buff,sizeof(buff)+1);
-
-    if(strcmp(buff,"btn_toggle") == 0){
+    delay(500);
+    if(strcmp(buff, "btn_toggle") == 0){
       switch(on_off){
         case 0 :
-          pid = fork();
           on_off = 1;
           lcd = lcd_set();
           lcdPosition(lcd, 0, 0);
           lcdPrintf(lcd, "Actived");
+	  pid = fork();
+	  printf("child : %d\n", pid);
+	  delay(3000);
           break;
-/*
+
         case 1 :
-          char str1[20] = "kill -9 ";
-          char str2[10];
-          sprintf(str2,"%d",pid);
-          strcat(str1,str2);
-          printf("%s",str1);
-          system(str1);
+	  sprintf(instruction,"%s%d", str1, pid);
+          printf("child is killed\n");
+	  system(instruction);
           on_off = 0;
           lcd = lcd_set();
           lcdPosition(lcd, 0, 0);
           lcdPrintf(lcd, "Deactived");
+	  delay(3000);
           break;
-*/
       }
     }
     if(pid == 0) {
       printf("child(%d), break!\n",getpid());
-      break;
+      return;
     }
   }
 }
@@ -196,14 +201,13 @@ int main(){
       exit(1);
     }
 
-    pinMode(LED, OUTPUT);
     pinMode(VIB, INPUT);
+    pinMode(LED, OUTPUT);
+
     if((fd = open(LED_DEV_FILE, O_RDONLY))<0){
       printf("Fail to open file\n");
     }
     
-
-
     button_toggle();
 
     while(1){
@@ -225,7 +229,7 @@ int main(){
              }
     	       break;
           case 2 : printf("vibration mode 2 : ");
-            printf("Temperature & Humidity");
+            printf("Temperature & Humidity\n");
             lcd = lcd_set();
             read_dht11_dat(lcd);
     	    break;

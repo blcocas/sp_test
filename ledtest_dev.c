@@ -51,7 +51,10 @@ ssize_t button_read(struct file *pfile, char __user *buffer, size_t length, loff
     printk("button interrupt occured!\n");
     copy_to_user(buffer, "btn_toggle", length);
     button_state = 0;
+  }else{
+    copy_to_user(buffer, "no_signal", length);
   }
+  printk("testtest!");
   return 0;
 }
 
