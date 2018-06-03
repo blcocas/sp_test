@@ -25,10 +25,13 @@
 #define VIB 26
 #define LED_DEV_FILE "/dev/ledtest_dev"
 
+
+
 void INT_handler(int);
 void init();
 int led_toggle();
 int vibration_input();
+void button_toggle();
 
 static char receive[7];
 int dht11_dat[5] = { 0, 0, 0, 0, 0 };
@@ -129,7 +132,51 @@ int led_toggle(){
   return led_state;
 }
 
-int ledInit(){
+int button_toggle(){
+
+  int fd = 0;
+  char buff[8];
+  int on_off = 0;
+  int pid = 0;
+
+  fd = open("LED_DEV_FILE",O_RDONLY)
+
+  while(1){ //
+    read(fd,buff,6);
+
+    if(strcmp(buff,"toggle") == 0){
+      switch(on_off){
+        case 0 :
+          pid = fork();
+          on_off = 1;
+          lcd = lcd_set();
+          lcdPosition(lcd, 0, 0);
+          lcdPrintf(lcd, "Actived");
+          break;
+
+        case 1 :
+          char str1[20] = "kill -9 ";
+          char str2[10];
+          sprintf(str2,"%d",pid);
+          strcat(str1,str2);
+          printf("%s",str1);
+          system(str1);
+          on_off = 0;
+          lcd = lcd_set();
+          lcdPosition(lcd, 0, 0);
+          lcdPrintf(lcd, "Deactived");
+          break;
+
+      }
+    }
+    if(pid == 0) {
+      printf("child(%d), break!\n",getpid());
+      break;
+    }
+  }
+}
+
+int lcd_set(){
   int lcd;
   if(lcd = lcdInit (2, 16, 4, LCD_RS, LCD_E, LCD_D4, LCD_D5, LCD_D6, LCD_D7, 0, 0, 0, 0)){
     return lcd;
@@ -149,6 +196,8 @@ int main(){
     pinMode(LED, OUTPUT);
     pinMode(VIB, INPUT);
 
+    button_toggle();
+
     while(1){
         mode = vibration_input();
 
@@ -156,20 +205,20 @@ int main(){
           case 1 : printf("vibration mode 1\n");
              if(led_toggle()){
                printf("led light on\n");
-               lcd = ledInit();
+               lcd = lcd_set();
                lcdPosition(lcd, 0, 0);
                lcdPrintf(lcd, "LED LIGHT ON!");
              }
              else{
                printf("led light off\n");
-               lcd = ledInit();
+               lcd = lcd_set();
                lcdPosition(lcd, 0, 0);
                lcdPrintf(lcd, "LED LIGHT OFF!");
              }
     	       break;
           case 2 : printf("vibration mode 2 : ");
             printf("Temperature & Humidity");
-            lcd = ledInit();
+            lcd = lcd_set();
             read_dht11_dat(lcd);
     	    break;
           case 3 : printf("vibration mode 3 : ");
