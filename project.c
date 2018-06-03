@@ -30,6 +30,7 @@
 void INT_handler(int);
 void init();
 int led_toggle();
+int lcd_set();
 int vibration_input();
 void button_toggle();
 
@@ -137,13 +138,13 @@ void button_toggle(){
   int fd = 0;
   char buff[12];
   int on_off = 0;
-  int pid = 0;
+  int pid = 1;
   int lcd = 0;
 
   fd = open("LED_DEV_FILE",O_RDONLY);
 
   while(1){ //
-    read(fd,buff,12);
+    read(fd,buff,sizeof(buff)+1);
 
     if(strcmp(buff,"btn_toggle") == 0){
       switch(on_off){
@@ -154,7 +155,7 @@ void button_toggle(){
           lcdPosition(lcd, 0, 0);
           lcdPrintf(lcd, "Actived");
           break;
-
+/*
         case 1 :
           char str1[20] = "kill -9 ";
           char str2[10];
@@ -167,7 +168,7 @@ void button_toggle(){
           lcdPosition(lcd, 0, 0);
           lcdPrintf(lcd, "Deactived");
           break;
-
+*/
       }
     }
     if(pid == 0) {
