@@ -30,6 +30,7 @@
 void INT_handler(int);
 void init();
 int led_toggle();
+int lcd_set();
 int vibration_input();
 void button_toggle();
 
@@ -143,7 +144,7 @@ void button_toggle(){
   fd = open("LED_DEV_FILE",O_RDONLY);
 
   while(1){ //
-    read(fd,buff,10);
+    read(fd,buff,sizeof(buff)+1);
 
     if(strcmp(buff,"btn_toggle") == 0){
       switch(on_off){
