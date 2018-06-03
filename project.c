@@ -90,19 +90,19 @@ int vibration_input(){
   clock_t start;
 
   printf("waiting input\n");
-  delay(500);
+  delay(700);
   while(!(signal = digitalRead(VIB))){}
   printf("First input!\n");
   start = clock();
   count++;
   signal = 0;
-  delay(500);
+  delay(700);
   while(difftime(clock(), start) < 3000000){
     if(signal = digitalRead(VIB)) {
       count++;
       printf("%d input!\n", count);
       signal = 0;
-      delay(500);
+      delay(700);
     }
   }
   printf("vibration number is %d\n", count);
@@ -141,6 +141,7 @@ int main(){
 
     int mode;
     int lcd;
+    int fd = 0;
     if(wiringPiSetup() == -1){
       printf("Fail to setup WiringPi\n");
       exit(1);
@@ -148,6 +149,11 @@ int main(){
 
     pinMode(LED, OUTPUT);
     pinMode(VIB, INPUT);
+    if((fd = open(LED_DEV_FILE, O_RDONLY))<0){
+      printf("Fail to open file\n");
+    }
+    
+
 
     while(1){
         mode = vibration_input();

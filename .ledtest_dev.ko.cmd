@@ -1,0 +1,1 @@
+cmd_/home/pi/project/sp_test/ledtest_dev.ko := ld -EL -r  -T ./scripts/module-common.lds --build-id  -o /home/pi/project/sp_test/ledtest_dev.ko /home/pi/project/sp_test/ledtest_dev.o /home/pi/project/sp_test/ledtest_dev.mod.o ;  true
