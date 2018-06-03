@@ -138,6 +138,7 @@ int button_toggle(){
   char buff[12];
   int on_off = 0;
   int pid = 0;
+  int lcd = 0;
 
   fd = open("LED_DEV_FILE",O_RDONLY)
 
