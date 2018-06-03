@@ -31,6 +31,7 @@ irqreturn_t interrupt_handler(int irq, void *dev_id){
 
 int ledtest_open(struct inode *pinode, struct file *pfile){
   printk(KERN_ALERT "OPEN ledtest_dev\n");
+
   if(gpio_request(GPIO, "GPIO") < 0) 
 	  printk(KERN_ALERT "Led gpio allocation error!\n");
   if(gpio_direction_output(GPIO, 1) < 0) 
@@ -48,12 +49,11 @@ int ledtest_close(struct inode *pinode, struct file *pfile){
 ssize_t button_read(struct file *pfile, char __user *buffer, size_t length, loff_t *offset){
   if(button_state == 1){
     printk("button interrupt occured!\n");
-    copy_to_user(buffer, "button_on", length);
+    copy_to_user(buffer, "btn_toggle", length);
     button_state = 0;
   }
   return 0;
 }
-
 
 ssize_t ledtest_write(struct file *pfile, const char __user *buffer, size_t length, loff_t *offset){
   copy_from_user(msg, buffer, length);
