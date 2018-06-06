@@ -20,15 +20,16 @@ int button_state = 0;
 
 MODULE_LICENSE("GPL");
 
-irqreturn_t interrupt_handler(int irq, void *dev_id){
+/*irqreturn_t interrupt_handler(int irq, void *dev_id){
   if(gpio_get_value(BUTTON)){
+    while(gpio_get_value(BUTTON)){}
     button_state = 1;
     printk("button on\n");
   }
   printk("This is interrupt routine\n");
   return IRQ_HANDLED;
 }
-
+*/
 int ledtest_open(struct inode *pinode, struct file *pfile){
   printk(KERN_ALERT "OPEN ledtest_dev\n");
 
@@ -47,15 +48,34 @@ int ledtest_close(struct inode *pinode, struct file *pfile){
 }
 
 ssize_t button_read(struct file *pfile, char __user *buffer, size_t length, loff_t *offset){
+  if(gpio_get_value(BUTTON) == 1)
+  	button_state = 1;
   if(button_state == 1){
-    printk("button interrupt occured!\n");
-    copy_to_user(buffer, "btn_toggle", length);
+	  button_state == 0;
+	  copy_to_user(buffer,"btn_toggle", length);
+  }
+  else{
+	  copy_to_user(buffer, "no_signal", length);
+  }
+  printk("btn test");
+  return 0;
+  /*while(gpio_get_value(BUTTON)==0){}
+  if(gpio_get_value(BUTTON)==1)
+  {
+    printk("button input occured\n");
+  
+  if(button_state == 1){
     button_state = 0;
+    printk("button interrupt occured!\n");
+    
+    copy_to_user(buffer, "btn_toggle", length);
   }else{
     copy_to_user(buffer, "no_signal", length);
   }
   printk("testtest!");
-  return 0;
+  return 0;*/
+
+ // printk(KERN_ALERT "OPEN ledtest_dev\n");
 }
 
 ssize_t ledtest_write(struct file *pfile, const char __user *buffer, size_t length, loff_t *offset){
@@ -94,14 +114,15 @@ int __init ledtest_init(void){
 	  printk(KERN_ALERT "Button gpio allocation error\n");
   if(gpio_direction_input(BUTTON) < 0)
 	  printk(KERN_ALERT "Button setting error\n");
-
-  if(request_irq(gpio_to_irq(BUTTON), interrupt_handler, IRQF_TRIGGER_RISING, "Button", NULL) < 0) printk("Not request interrupt\n");
+  gpio_set_value(BUTTON, 0);
+  //if(request_irq(gpio_to_irq(BUTTON), interrupt_handler, IRQF_TRIGGER_RISING, "Button", NULL) < 0) printk("Not request interrupt\n");
   return 0;
 }
 
 void __exit ledtest_exit(void){
   printk(KERN_ALERT "EXIT ledtest_dev\n");
   if(msg) kfree(msg);
+  //free_irq(gpio_to_irq(BUTTON), interrupt_handler);
   unregister_chrdev(DEV_NUM, DEV_NAME);
 }
 

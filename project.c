@@ -21,7 +21,6 @@
 #define LCD_D5 5
 #define LCD_D6 4
 #define LCD_D7 1
-#define LED 27
 #define VIB 26
 #define LED_DEV_FILE "/dev/ledtest_dev"
 
@@ -93,7 +92,7 @@ int vibration_input(){
   int count = 0;
   clock_t start;
 
-  printf("waiting input : ");
+  printf("waiting input\n");
   delay(1000);
 
   while(!(signal = digitalRead(VIB))){}
@@ -151,7 +150,9 @@ void button_toggle(){
   
   while(1){ 
     read(fd,buff,sizeof(buff)+1);
-    delay(500);
+    printf("buff : %s\n",buff);
+    delay(2000);
+
     if(strcmp(buff, "btn_toggle") == 0){
       switch(on_off){
         case 0 :
@@ -160,7 +161,6 @@ void button_toggle(){
           lcdPosition(lcd, 0, 0);
           lcdPrintf(lcd, "Actived");
 	  pid = fork();
-	  printf("child : %d\n", pid);
 	  delay(3000);
           break;
 
@@ -195,19 +195,13 @@ int main(){
 
     int mode;
     int lcd;
-    int fd = 0;
     if(wiringPiSetup() == -1){
       printf("Fail to setup WiringPi\n");
       exit(1);
     }
-
-    pinMode(VIB, INPUT);
-    pinMode(LED, OUTPUT);
-
-    if((fd = open(LED_DEV_FILE, O_RDONLY))<0){
-      printf("Fail to open file\n");
-    }
     
+    pinMode(VIB, INPUT);
+ 
     button_toggle();
 
     while(1){
@@ -233,8 +227,6 @@ int main(){
             lcd = lcd_set();
             read_dht11_dat(lcd);
     	    break;
-          case 3 : printf("vibration mode 3 : ");
-    	       break;
           default : printf("vibration mode default\n");
         }
     }
