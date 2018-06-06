@@ -33,9 +33,9 @@ MODULE_LICENSE("GPL");
 int ledtest_open(struct inode *pinode, struct file *pfile){
   printk(KERN_ALERT "OPEN ledtest_dev\n");
 
-  if(gpio_request(GPIO, "GPIO") < 0) 
+  if(gpio_request(GPIO, "GPIO") < 0)
 	  printk(KERN_ALERT "Led gpio allocation error!\n");
-  if(gpio_direction_output(GPIO, 1) < 0) 
+  if(gpio_direction_output(GPIO, 1) < 0)
 	  printk(KERN_ALERT "Led setting error!\n");
 
   return 0;
@@ -43,31 +43,27 @@ int ledtest_open(struct inode *pinode, struct file *pfile){
 
 int ledtest_close(struct inode *pinode, struct file *pfile){
   printk(KERN_ALERT "RELEASE ledtest_dev\n");
-  
+
   return 0;
 }
 
 ssize_t button_read(struct file *pfile, char __user *buffer, size_t length, loff_t *offset){
   if(gpio_get_value(BUTTON) == 1)
-  	button_state = 1;
-  if(button_state == 1){
-	  button_state == 0;
-	  copy_to_user(buffer,"btn_toggle", length);
-  }
-  else{
-	  copy_to_user(buffer, "no_signal", length);
-  }
+  	copy_to_user(buffer,"btn_toggle", length);
+  else
+    copy_to_user(buffer, "no_signal", length);
+
   printk("btn test");
   return 0;
   /*while(gpio_get_value(BUTTON)==0){}
   if(gpio_get_value(BUTTON)==1)
   {
     printk("button input occured\n");
-  
+
   if(button_state == 1){
     button_state = 0;
     printk("button interrupt occured!\n");
-    
+
     copy_to_user(buffer, "btn_toggle", length);
   }else{
     copy_to_user(buffer, "no_signal", length);
