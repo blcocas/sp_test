@@ -112,7 +112,7 @@ int vibration_input(){
     if(signal = digitalRead(VIB)) {
       count++;
       printf("%d input!\n", count);
-      //lcd = lcd_set();
+      lcd = lcd_set();
       lcdPosition(lcd, 0, 0);
       lcdPrintf(lcd, "Tap Number : %d",count);
       signal = 0;
@@ -170,7 +170,7 @@ void button_toggle(){
           lcdPosition(lcd, 0, 0);
           lcdPrintf(lcd, "Actived");
 	  pid = fork();
-	  //delay(3000);
+	  delay(2000);
           break;
 
         case 1 :
@@ -182,7 +182,7 @@ void button_toggle(){
           lcd = lcd_set();
           lcdPosition(lcd, 0, 0);
           lcdPrintf(lcd, "Deactived");
-	  //delay(3000);
+	  delay(2000);
           break;
       }
     }
