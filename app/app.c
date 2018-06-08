@@ -233,14 +233,14 @@ int main(){
              if(led_toggle()){
                printf("led light on\n");
                lcdClear(lcd);
-               lcdPosition(lcd, 0, 0);
+               // lcdPosition(lcd, 0, 0);
                lcdPrintf(lcd, "LED LIGHT ON!");
                delay(2000);
              }
              else{
                printf("led light off\n");
                lcdClear(lcd);
-               lcdPosition(lcd, 0, 0);
+               // lcdPosition(lcd, 0, 0);
                lcdPrintf(lcd, "LED LIGHT OFF!");
                delay(2000);
              }
@@ -253,7 +253,7 @@ int main(){
     	    break;
           default : printf("vibration mode default\n");
             lcdClear(lcd);
-            lcdPosition(lcd, 0, 0);
+            // lcdPosition(lcd, 0, 0);
             lcdPrintf(lcd, "Default!");
             delay(2000);
             //break;
