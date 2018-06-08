@@ -221,14 +221,14 @@ int main(){
           case 1 : printf("vibration mode 1\n");
              if(led_toggle()){
                printf("led light on\n");
-               //lcd = lcd_set();
+               lcd = lcd_set();
                lcdPosition(lcd, 0, 0);
                lcdPrintf(lcd, "LED LIGHT ON!");
                delay(2000);
              }
              else{
                printf("led light off\n");
-               //lcd = lcd_set();
+               lcd = lcd_set();
                lcdPosition(lcd, 0, 0);
                lcdPrintf(lcd, "LED LIGHT OFF!");
                delay(2000);
@@ -236,7 +236,7 @@ int main(){
     	       break;
           case 2 : printf("vibration mode 2 : ");
             printf("Temperature & Humidity\n");
-            //lcd = lcd_set();
+            lcd = lcd_set();
             read_dht11_dat(lcd);
             delay(2000);
     	    break;
