@@ -255,7 +255,7 @@ int main(){
             lcdPosition(lcd, 0, 0);
             lcdPrintf(lcd, "Default!");
             delay(2000);
-            break;
+            //break;
         }
     }
 
