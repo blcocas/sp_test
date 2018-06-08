@@ -241,6 +241,7 @@ int main(){
             delay(2000);
     	    break;
           default : printf("vibration mode default\n");
+            break;
         }
     }
 
