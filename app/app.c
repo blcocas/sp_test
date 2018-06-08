@@ -112,7 +112,7 @@ int vibration_input(){
   start = clock();
   count++;
   signal = 0;
-  delay(1000);
+  delay(650);
   // lcdPosition(lcd, 0, 0);
   // lcdPrintf(lcd, "                 ");
   while(difftime(clock(), start) < 3000000){
@@ -123,7 +123,7 @@ int vibration_input(){
       // lcdPosition(lcd, 0, 0);
       // lcdPrintf(lcd, "Tap Number : %d",count);
       signal = 0;
-      delay(1000);
+      delay(650);
       // lcdPosition(lcd, 0, 0);
       // lcdPrintf(lcd, "                 ");
     }
