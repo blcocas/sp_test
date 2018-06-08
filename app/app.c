@@ -99,11 +99,11 @@ int vibration_input(){
   lcdPosition(lcd, 0, 0);
   lcdPrintf(lcd, "Waiting Input");
   delay(1000);
-  lcdPosition(lcd, 0, 0);
-  lcdPrintf(lcd, "                 ");
+  // lcdPosition(lcd, 0, 0);
+  // lcdPrintf(lcd, "                 ");
 
   while(!(signal = digitalRead(VIB))){}
-  lcd = lcd_set();
+  //lcd = lcd_set();
   lcdPosition(lcd, 0, 0);
   lcdPrintf(lcd, "Tap Number : 1");
 
