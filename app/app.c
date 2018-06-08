@@ -96,6 +96,7 @@ int vibration_input(){
   clock_t start;
 
   printf("waiting input\n");
+
   lcdPrintf(lcd, "Waiting Input");
   delay(1000);
 
@@ -113,11 +114,13 @@ int vibration_input(){
     if(signal = digitalRead(VIB)) {
       count++;
       printf("%d input!\n", count);
-      // lcd = lcd_set();
-      // lcdPosition(lcd, 0, 0);
-      // lcdPrintf(lcd, "Tap Number : %d",count);
+      lcd = lcd_set();
+      lcdPosition(lcd, 0, 0);
+      lcdPrintf(lcd, "Tap Number : %d",count);
       signal = 0;
       delay(1000);
+      lcdPosition(lcd, 0, 0);
+      lcdPrintf(lcd, "                 "t);
     }
   }
   printf("vibration number is %d\n", count);
@@ -245,6 +248,8 @@ int main(){
             lcdPosition(lcd, 0, 0);
             lcdPrintf(lcd, "Default!");
             delay(2000);
+            lcdPosition(lcd, 0, 0);
+            lcdPrintf(lcd, "              ");
             break;
         }
     }
