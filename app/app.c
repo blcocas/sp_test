@@ -91,13 +91,13 @@ int vibration_input(){
   int signal = 0;
   int count = 0;
   int lcd = 0;
-  lcd = lcd_set();
+  // lcd = lcd_set();
 
   clock_t start;
 
   printf("waiting input\n");
-  lcdPosition(lcd, 0, 0);
-  lcdPrintf(lcd, "Waiting Input");
+  // lcdPosition(lcd, 0, 0);
+  // lcdPrintf(lcd, "Waiting Input");
   delay(1000);
 
 
@@ -129,8 +129,8 @@ int vibration_input(){
     }
   }
   printf("vibration number is %d\n", count);
-  lcdPosition(lcd, 0, 0);
-  lcdPrintf(lcd, "                 ");
+  // lcdPosition(lcd, 0, 0);
+  // lcdPrintf(lcd, "                 ");
   return count;
 }
 
