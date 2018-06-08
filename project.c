@@ -10,7 +10,7 @@
 #include <unistd.h>
 #include <linux/kdev_t.h>
 #include <string.h>
-
+#include <sys/wait.h>
 //#include <softPwm.h>
 
 #define MAXTIMINGS    85
@@ -161,18 +161,19 @@ void button_toggle(){
           lcdPosition(lcd, 0, 0);
           lcdPrintf(lcd, "Actived");
 	  pid = fork();
-	  delay(3000);
+	  //delay(3000);
           break;
 
         case 1 :
 	  sprintf(instruction,"%s%d", str1, pid);
           printf("child is killed\n");
 	  system(instruction);
+	  waitpid(pid,NULL,0);
           on_off = 0;
           lcd = lcd_set();
           lcdPosition(lcd, 0, 0);
           lcdPrintf(lcd, "Deactived");
-	  delay(3000);
+	  //delay(3000);
           break;
       }
     }

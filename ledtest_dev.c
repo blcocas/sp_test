@@ -22,7 +22,7 @@ MODULE_LICENSE("GPL");
 
 irqreturn_t interrupt_handler(int irq, void *dev_id){
   if(gpio_get_value(BUTTON)){
-    while(gpio_get_value(BUTTON)){}
+   // while(gpio_get_value(BUTTON)){}
     button_state = 1;
     printk("button on\n");
   }
