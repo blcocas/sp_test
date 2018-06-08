@@ -112,6 +112,7 @@ int vibration_input(){
     if(signal = digitalRead(VIB)) {
       count++;
       printf("%d input!\n", count);
+      lcd = lcd_set();
       lcdPosition(lcd, 0, 0);
       lcdPrintf(lcd, "Tap Number : %d",count);
       signal = 0;
