@@ -96,11 +96,12 @@ int vibration_input(){
   clock_t start;
 
   printf("waiting input\n");
+  lcdPrintf(lcd, "Waiting Input");
   delay(1000);
 
   while(!(signal = digitalRead(VIB))){}
   lcdPosition(lcd, 0, 0);
-  lcdPrintf(lcd, "Waiting Input");
+
   printf("First input!\n");
 
 
@@ -241,6 +242,9 @@ int main(){
             delay(2000);
     	    break;
           default : printf("vibration mode default\n");
+            lcdPosition(lcd, 0, 0);
+            lcdPrintf(lcd, "Default!");
+            delay(2000);
             break;
         }
     }
