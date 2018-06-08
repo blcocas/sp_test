@@ -120,7 +120,7 @@ int vibration_input(){
       signal = 0;
       delay(1000);
       lcdPosition(lcd, 0, 0);
-      lcdPrintf(lcd, "                 "t);
+      lcdPrintf(lcd, "                 ");
     }
   }
   printf("vibration number is %d\n", count);
