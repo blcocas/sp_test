@@ -90,6 +90,9 @@ void read_dht11_dat(int lcd) {
 int vibration_input(){
   int signal = 0;
   int count = 0;
+  int lcd = 0;
+  lcd = lcd_set();
+
   clock_t start;
 
   printf("waiting input\n");
@@ -98,6 +101,9 @@ int vibration_input(){
   while(!(signal = digitalRead(VIB))){}
 
   printf("First input!\n");
+  lcdPosition(lcd, 0, 0);
+  lcdPrintf(lcd, "Tap Number : 1");
+
   start = clock();
   count++;
   signal = 0;
@@ -106,6 +112,8 @@ int vibration_input(){
     if(signal = digitalRead(VIB)) {
       count++;
       printf("%d input!\n", count);
+      lcdPosition(lcd, 0, 0);
+      lcdPrintf(lcd, "Tap Number : %d",count);
       signal = 0;
       delay(1000);
     }
@@ -147,8 +155,8 @@ void button_toggle(){
   fd = open(LED_DEV_FILE, O_RDONLY);
 
   if(fd<0) printf("Fail to open device file\n");
-  
-  while(1){ 
+
+  while(1){
     read(fd,buff,sizeof(buff)+1);
     printf("buff : %s\n",buff);
     delay(2000);
@@ -200,9 +208,9 @@ int main(){
       printf("Fail to setup WiringPi\n");
       exit(1);
     }
-    
+
     pinMode(VIB, INPUT);
- 
+
     button_toggle();
 
     while(1){
