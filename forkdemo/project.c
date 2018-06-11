@@ -10,7 +10,7 @@
 #include <unistd.h>
 #include <linux/kdev_t.h>
 #include <string.h>
-#include <sys/wait.h>
+
 //#include <softPwm.h>
 
 #define MAXTIMINGS    85
@@ -21,6 +21,7 @@
 #define LCD_D5 5
 #define LCD_D6 4
 #define LCD_D7 1
+#define LED 27
 #define VIB 26
 #define LED_DEV_FILE "/dev/ledtest_dev"
 
@@ -29,7 +30,6 @@
 void INT_handler(int);
 void init();
 int led_toggle();
-int lcd_set();
 int vibration_input();
 void button_toggle();
 
@@ -90,33 +90,22 @@ void read_dht11_dat(int lcd) {
 int vibration_input(){
   int signal = 0;
   int count = 0;
-  int lcd = 0;
-  lcd = lcd_set();
-
   clock_t start;
 
   printf("waiting input\n");
-  delay(1000);
-
+  delay(500);
   while(!(signal = digitalRead(VIB))){}
-  lcdPosition(lcd, 0, 0);
-  lcdPrintf(lcd, "Waiting Input");
   printf("First input!\n");
-
-
   start = clock();
   count++;
   signal = 0;
-  delay(1000);
+  delay(500);
   while(difftime(clock(), start) < 3000000){
     if(signal = digitalRead(VIB)) {
       count++;
       printf("%d input!\n", count);
-      // lcd = lcd_set();
-      // lcdPosition(lcd, 0, 0);
-      // lcdPrintf(lcd, "Tap Number : %d",count);
       signal = 0;
-      delay(1000);
+      delay(500);
     }
   }
   printf("vibration number is %d\n", count);
@@ -143,52 +132,46 @@ int led_toggle(){
   return led_state;
 }
 
-void button_toggle(){
+int button_toggle(){
 
   int fd = 0;
-  char buff[12];
-  char str1[10] = "kill -9 ";
-  char instruction[20] = "";
+  char buff[8];
   int on_off = 0;
-  int pid = 1;
-  int lcd = 0;
+  int pid = 0;
 
-  fd = open(LED_DEV_FILE, O_RDONLY);
+  fd = open("LED_DEV_FILE",O_RDONLY)
 
-  if(fd<0) printf("Fail to open device file\n");
+  while(1){ //
+    read(fd,buff,6);
 
-  while(1){
-    read(fd,buff,sizeof(buff)+1);
-    printf("buff : %s\n",buff);
-    delay(2000);
-
-    if(strcmp(buff, "btn_toggle") == 0){
+    if(strcmp(buff,"toggle") == 0){
       switch(on_off){
         case 0 :
+          pid = fork();
           on_off = 1;
           lcd = lcd_set();
           lcdPosition(lcd, 0, 0);
           lcdPrintf(lcd, "Actived");
-	  pid = fork();
-	  //delay(3000);
           break;
 
         case 1 :
-	  sprintf(instruction,"%s%d", str1, pid);
-          printf("child is killed\n");
-	  system(instruction);
-	  waitpid(pid,NULL,0);
+          char str1[20] = "kill -9 ";
+          char str2[10];
+          sprintf(str2,"%d",pid);
+          strcat(str1,str2);
+          printf("%s",str1);
+          system(str1);
           on_off = 0;
           lcd = lcd_set();
           lcdPosition(lcd, 0, 0);
           lcdPrintf(lcd, "Deactived");
-	  //delay(3000);
           break;
+
       }
     }
     if(pid == 0) {
       printf("child(%d), break!\n",getpid());
-      return;
+      break;
     }
   }
 }
@@ -210,6 +193,7 @@ int main(){
       exit(1);
     }
 
+    pinMode(LED, OUTPUT);
     pinMode(VIB, INPUT);
 
     button_toggle();
@@ -224,22 +208,21 @@ int main(){
                lcd = lcd_set();
                lcdPosition(lcd, 0, 0);
                lcdPrintf(lcd, "LED LIGHT ON!");
-               delay(2000);
              }
              else{
                printf("led light off\n");
                lcd = lcd_set();
                lcdPosition(lcd, 0, 0);
                lcdPrintf(lcd, "LED LIGHT OFF!");
-               delay(2000);
              }
     	       break;
           case 2 : printf("vibration mode 2 : ");
-            printf("Temperature & Humidity\n");
+            printf("Temperature & Humidity");
             lcd = lcd_set();
             read_dht11_dat(lcd);
-            delay(2000);
     	    break;
+          case 3 : printf("vibration mode 3 : ");
+    	       break;
           default : printf("vibration mode default\n");
         }
     }
