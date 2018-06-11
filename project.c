@@ -11,7 +11,6 @@
 #include <linux/kdev_t.h>
 #include <string.h>
 #include <sys/wait.h>
-//#include <softPwm.h>
 
 #define MAXTIMINGS    85
 #define DHTPIN        7  //wPi pin. physical num 7
@@ -41,7 +40,6 @@ void read_dht11_dat(int lcd) {
     uint8_t laststate = HIGH;
     uint8_t counter = 0;
     uint8_t j = 0, i;
-    float f;
 
     dht11_dat[0] = dht11_dat[1] = dht11_dat[2] = dht11_dat[3] = dht11_dat[4] = 0;
 
@@ -76,7 +74,6 @@ void read_dht11_dat(int lcd) {
     }
 
         if ((j >= 40) && (dht11_dat[4] == ( (dht11_dat[0] + dht11_dat[1] + dht11_dat[2] + dht11_dat[3]) & 0xFF ))) {
-            f = dht11_dat[2] * 9. / 5. + 32;
             lcdPosition(lcd, 0, 0);
             lcdPrintf(lcd, "Humidity: %d.%d %%\n", dht11_dat[0], dht11_dat[1]);
             lcdPosition(lcd, 0, 1);
